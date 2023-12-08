@@ -1,8 +1,15 @@
-from  models.base_model import BaseModel
-from models.engine.file_storage import FileStorage
+from models import storage
+from models.base_model import BaseModel
 
-test = FileStorage()
-data = {'id': 'bd9146e3-a0fe-46dd-b249-340a665d523f', 'created_at': '2023-12-06T18:19:40.362558', 'updated_at': '2023-12-06T18:19:40.362558', 'name': 'XXXX', '__class__': 'BaseModel'}
-obj = BaseModel(**data)
-print("--------")
-print(test.new(obj))
+all_objs = storage.all()
+print("-- Reloaded objects --")
+for obj_id in all_objs.keys():
+    obj = all_objs[obj_id]
+    print(obj)
+
+print("-- Create a new object --")
+my_model = BaseModel()
+my_model.name = "My_First_Model"
+my_model.my_number = 89
+my_model.save()
+print(my_model)
