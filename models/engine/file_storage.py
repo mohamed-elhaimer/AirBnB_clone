@@ -15,7 +15,6 @@ class FileStorage:
             json.dump(
                 {k: v.to_dict() for k, v in FileStorage.__objects.items()}, f)
     def reload(self):
-        current_classes = {'BaseModel': BaseModel}
         if not os.path.exists(self.__file_path):
             return
         else:
@@ -28,5 +27,5 @@ class FileStorage:
                 if deserialized is None:
                     return
                 self.__objects =  {
-                k: current_classes[k.split('.')[0]](**v)
+                k: BaseModel(**v)
                 for k, v in deserialized.items()}
