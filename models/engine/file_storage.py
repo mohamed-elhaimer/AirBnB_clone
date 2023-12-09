@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from models.base_model import BaseModel
 
 class FileStorage:
     __file_path = "file.json"
@@ -8,19 +8,25 @@ class FileStorage:
     def all(self):
         return self.__objects
     def new(self, obj):
-        data = obj.__dict__
         key = type(obj).__name__ + "." + obj.id
-        self.__objects[key] = data
-        return self.__objects
+        self.__objects[key] = obj
     def save(self):
-        with open(self.__file_path, 'w') as file:
-            json.dump(self.__objects, file)
+        with open(FileStorage.__file_path, 'w') as f:
+            json.dump(
+                {k: v.to_dict() for k, v in FileStorage.__objects.items()}, f)
     def reload(self):
+        current_classes = {'BaseModel': BaseModel}
         if not os.path.exists(self.__file_path):
             return
         else:
-            with open(self.__file_path, 'r') as file:
-                loaded_data = json.load(file)
-        return loaded_data
-
-
+            with open(FileStorage.__file_path, 'r') as f:
+                deserialized = None
+                try:
+                    deserialized = json.load(f)
+                except json.JSONDecodeError:
+                    pass
+                if deserialized is None:
+                    return
+                self.__objects =  {
+                k: current_classes[k.split('.')[0]](**v)
+                for k, v in deserialized.items()}
