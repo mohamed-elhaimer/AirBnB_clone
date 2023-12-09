@@ -26,7 +26,7 @@ class BaseModel:
         models.storage.save()
     def to_dict(self):
         """the dictionary return"""
-        dict = {**self.__dict__}
+        dict = self.__dict__
         dict['__class__'] = type(self).__name__
         dict['created_at'] = dict['created_at'].isoformat()
         dict['updated_at'] = dict['updated_at'].isoformat()
