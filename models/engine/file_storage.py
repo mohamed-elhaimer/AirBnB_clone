@@ -10,17 +10,15 @@ class FileStorage:
     def new(self, obj):
         key = type(obj).__name__ + "." + obj.id
         self.__objects[key] = obj
-        return self.__objects
     def save(self):
-        with open(FileStorage.__file_path, 'w') as f:
-            data = {k:v.to_dict() for k, v in FileStorage.__objects.items()}
-            json.dump(data, f)
+        with open(self.__file_path, 'w') as f:
+            json.dump({k:v.to_dict() for k, v in self.__objects.items()}, f)
     def reload(self):
         current_class = {"BaseModel" : BaseModel}
-        if not os.path.exists(FileStorage.__file_path):
+        if not os.path.exists(self.__file_path):
             return
         else:
-            with open(FileStorage.__file_path, 'r') as f:
+            with open(self.__file_path, 'r') as f:
                 deserialized = None
                 try:
                     deserialized = json.load(f)
