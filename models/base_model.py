@@ -16,7 +16,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now().date()
             self.updated_at = datetime.now().date()
-            models.storage.new(self)
+        models.storage.new(self)
     def __str__(self):
         return ("[" + str(self.__class__.__name__) + "] " + "(" + str(self.id) + ") " + str(self.__dict__))
     def save(self):
