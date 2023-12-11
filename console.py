@@ -109,7 +109,7 @@ class HBNBCommand(cmd.Cmd):
             print(["{}".format(str(v)) for _, v in all_objects.items()])
             return
         if args[0] not in current_classes.keys():
-            print("class doesn't exist")
+            print("** class doesn't exist **")
             return
         else:
             print(["{}".format(str(v)) for _, v in all_objects.items()
