@@ -32,34 +32,41 @@ from models.amenity import Amenity
 from models.place import Place
 
 current_classes = {'BaseModel': BaseModel, 'User': User,
-                    'Amenity': Amenity, 'City': City, 'State': State,
-                    'Place': Place, 'Review': Review}
-list_attribut = ["id","created_at","updated_at"]
+                   'Amenity': Amenity, 'City': City, 'State': State,
+                   'Place': Place, 'Review': Review}
+list_attribut = ["id", "created_at", "updated_at"]
+
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb)"
+
     def precmd(self, line):
-        
+
         return super().precmd(line)
+
     def do_quit(self, args):
         """quit commande to exit the programme
         """
-        
+
         return True
+
     def do_EOF(self, line):
         """Inbuilt EOF command to gracefully catch errors.
         """
-        
+
         print("")
         return True
+
     def do_help(self, arg):
         """To get help on a command, type help <topic>.
         """
-        
-        return super().do_help(arg) 
+
+        return super().do_help(arg)
+
     def emptyline(self):
         """Do nothing on an empty line."""
         pass
+
     def do_create(self, args):
         """user creation"""
         args = args.split()
@@ -68,42 +75,47 @@ class HBNBCommand(cmd.Cmd):
         new_object = current_classes[args[0]]()
         new_object.save()
         print(new_object.id)
+
     def do_show(self, args):
         """show user"""
         args = args.split()
         if not valider_classname(args, True):
             return
         data = storage.all()
-        key =f"{args[0]}.{args[1]}"
+        key = f"{args[0]}.{args[1]}"
         my_object = data.get(key, None)
         if my_object is None:
             print("** no instance found **")
         else:
             print(my_object)
+
     def do_destroy(self, args):
         args = args.split()
         if not valider_classname(args, True):
             return
         data = storage.all()
-        key =f"{args[0]}.{args[1]}"
+        key = f"{args[0]}.{args[1]}"
         my_object = data.get(key, None)
         if my_object is None:
             print("** no instance found **")
             return
         del data[key]
         storage.save()
+
     def do_all(self, args):
         args = args.split()
         all_objects = storage.all()
         if len(args) < 1:
-            print(["{}".format(str(v)) for _, v in  all_objects.items()])
+            print(["{}".format(str(v)) for _, v in all_objects.items()])
             return
         if args[0] not in current_classes.keys():
             print("class doesn't exist")
             return
         else:
-            print(["{}".format(str(v)) for _, v in  all_objects.items() if type(v).__name__ == args[0]])
+            print(["{}".format(str(v)) for _, v in all_objects.items()
+                   if type(v).__name__ == args[0]])
             return
+
     def do_update(self, arg):
         args = arg.split()
         args = args[:4]
@@ -113,7 +125,7 @@ class HBNBCommand(cmd.Cmd):
             return
         data = storage.all()
         key = f"{args[0]}.{args[1]}"
-        my_object = data.get(key,None)
+        my_object = data.get(key, None)
         if my_object is None:
             print("** no instance found **")
             return
@@ -126,7 +138,9 @@ class HBNBCommand(cmd.Cmd):
             value_list = args[3].split()
             setattr(my_object, args[2], parse_str(value_list[0]))
         storage.save()
-def valider_classname(args, check_id = False):
+
+
+def valider_classname(args, check_id=False):
     if len(args) < 1:
         print("** class name missing **")
         return False
@@ -137,6 +151,8 @@ def valider_classname(args, check_id = False):
         print("** instance id missing **")
         return False
     return True
+
+
 def valider_att(args):
     if len(args) < 3:
         print("** attribute name missing **")
@@ -145,6 +161,8 @@ def valider_att(args):
         print("** value missing **")
         return False
     return True
+
+
 def parse_str(arg):
     """Parse `arg` to an `int`, `float` or `string`.
     """
@@ -155,6 +173,8 @@ def parse_str(arg):
         return float(parsed)
     else:
         return arg
+
+
 def is_float(x):
     """Checks if `x` is float.
     """
@@ -164,6 +184,8 @@ def is_float(x):
         return False
     else:
         return True
+
+
 def is_int(x):
     """Checks if `x` is int.
     """
@@ -174,5 +196,7 @@ def is_int(x):
         return False
     else:
         return a == b
+
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
