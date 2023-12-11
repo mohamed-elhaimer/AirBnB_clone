@@ -2,9 +2,10 @@ import cmd
 import re
 
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 
-current_classes = {'BaseModel': BaseModel}
+current_classes = {'BaseModel': BaseModel, 'User': User}
 list_attribut = ["id","created_at","updated_at"]
 
 class HBNBCommand(cmd.Cmd):
@@ -23,13 +24,11 @@ class HBNBCommand(cmd.Cmd):
         
         print("")
         return True
-    
     def do_help(self, arg):
         """To get help on a command, type help <topic>.
         """
         
-        return super().do_help(arg)
-    
+        return super().do_help(arg) 
     def emptyline(self):
         """Do nothing on an empty line."""
         pass
@@ -90,9 +89,7 @@ class HBNBCommand(cmd.Cmd):
         if my_object is None:
             print("** no instance found **")
             return
-        attribut = args[2]
-        value = args[3]
-        if attribut in list_attribut:
+        if args[2] in list_attribut:
             return
         first_attr = re.findall(r"^[\"\'](.*?)[\"\']", args[3])
         if first_attr:
@@ -124,7 +121,6 @@ def parse_str(arg):
     """Parse `arg` to an `int`, `float` or `string`.
     """
     parsed = re.sub("\"", "", arg)
-
     if is_int(parsed):
         return int(parsed)
     elif is_float(parsed):
@@ -150,6 +146,5 @@ def is_int(x):
         return False
     else:
         return a == b
-
 if __name__ == '__main__':
     HBNBCommand().cmdloop()

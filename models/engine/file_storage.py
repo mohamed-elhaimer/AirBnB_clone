@@ -1,7 +1,7 @@
 import os
 import json
 from models.base_model import BaseModel
-
+from models.user import User
 
 class FileStorage():
     __file_path = "file.json"
@@ -17,7 +17,7 @@ class FileStorage():
             json.dump(
                 {k: v.to_dict() for k, v in FileStorage.__objects.items()}, f)
     def reload(self):
-        current_classes = {'BaseModel': BaseModel}
+        current_classes = {'BaseModel': BaseModel, 'User': User}
         if not os.path.exists(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, 'r') as f:
