@@ -145,7 +145,7 @@ def valider_classname(args, check_id=False):
         print("** class name missing **")
         return False
     if args[0] not in current_classes.keys():
-        print("class doesn't exist")
+        print("**class doesn't exist**")
         return False
     if len(args) < 2 and check_id:
         print("** instance id missing **")
