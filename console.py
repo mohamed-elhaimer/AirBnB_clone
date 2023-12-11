@@ -1,10 +1,11 @@
 import cmd
-import sys
+import re
 
 from models.base_model import BaseModel
 from models import storage
 
 current_classes = {'BaseModel': BaseModel}
+list_attribut = ["id","created_at","updated_at"]
 
 class HBNBCommand(cmd.Cmd):
     prompt = "(hbnb)"
@@ -31,12 +32,11 @@ class HBNBCommand(cmd.Cmd):
     
     def emptyline(self):
         """Do nothing on an empty line."""
-        
         pass
     def do_create(self, args):
         """user creation"""
         args = args.split()
-        if not valider_classname(args, False):
+        if not valider_classname(args):
             return
         new_object = current_classes[args[0]]()
         new_object.save()
@@ -77,6 +77,30 @@ class HBNBCommand(cmd.Cmd):
         else:
             print(["{}".format(str(v)) for _, v in  all_objects.items() if type(v).__name__ == args[0]])
             return
+    def do_update(self, arg):
+        args = arg.split()
+        args = args[:4]
+        if not valider_classname(args, True):
+            return
+        if not valider_att(args):
+            return
+        data = storage.all()
+        key = f"{args[0]}.{args[1]}"
+        my_object = data.get(key,None)
+        if my_object is None:
+            print("** no instance found **")
+            return
+        attribut = args[2]
+        value = args[3]
+        if attribut in list_attribut:
+            return
+        first_attr = re.findall(r"^[\"\'](.*?)[\"\']", args[3])
+        if first_attr:
+            setattr(my_object, args[2], first_attr[0])
+        else:
+            value_list = args[3].split()
+            setattr(my_object, args[2], parse_str(value_list[0]))
+        storage.save()
 def valider_classname(args, check_id = False):
     if len(args) < 1:
         print("** class name missing **")
@@ -88,5 +112,44 @@ def valider_classname(args, check_id = False):
         print("** instance id missing **")
         return False
     return True
+def valider_att(args):
+    if len(args) < 3:
+        print("** attribute name missing **")
+        return False
+    if len(args) < 4:
+        print("** value missing **")
+        return False
+    return True
+def parse_str(arg):
+    """Parse `arg` to an `int`, `float` or `string`.
+    """
+    parsed = re.sub("\"", "", arg)
+
+    if is_int(parsed):
+        return int(parsed)
+    elif is_float(parsed):
+        return float(parsed)
+    else:
+        return arg
+def is_float(x):
+    """Checks if `x` is float.
+    """
+    try:
+        a = float(x)
+    except (TypeError, ValueError):
+        return False
+    else:
+        return True
+def is_int(x):
+    """Checks if `x` is int.
+    """
+    try:
+        a = float(x)
+        b = int(a)
+    except (TypeError, ValueError):
+        return False
+    else:
+        return a == b
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
