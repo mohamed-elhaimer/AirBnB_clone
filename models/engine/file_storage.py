@@ -15,6 +15,7 @@ from models.review import Review
 from models.amenity import Amenity
 from models.place import Place
 
+
 class FileStorage():
     """
     serializes instances to a JSON file and
@@ -30,12 +31,14 @@ class FileStorage():
         """
 
         return FileStorage.__objects
+
     def new(self, obj):
         """
         sets in __objects the obj with key <obj class name>.id
         """
         key = "{}.{}".format(type(obj).__name__, obj.id)
         FileStorage.__objects[key] = obj
+
     def save(self):
         """
         serializes __objects to the JSON file (path: __file_path)
@@ -43,14 +46,15 @@ class FileStorage():
         with open(FileStorage.__file_path, 'w') as f:
             json.dump(
                 {k: v.to_dict() for k, v in FileStorage.__objects.items()}, f)
+
     def reload(self):
         """
         deserializes the JSON file to __objects only if the JSON
         file exists; otherwise, does nothing
         """
         current_classes = {'BaseModel': BaseModel, 'User': User,
-                    'Amenity': Amenity, 'City': City, 'State': State,
-                    'Place': Place, 'Review': Review}
+                           'Amenity': Amenity, 'City': City, 'State': State,
+                           'Place': Place, 'Review': Review}
         if not os.path.exists(FileStorage.__file_path):
             return
         with open(FileStorage.__file_path, 'r') as f:

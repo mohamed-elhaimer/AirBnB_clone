@@ -6,6 +6,7 @@ which sub-classes the `BaseModel()` class.`
 """
 from models.base_model import BaseModel
 
+
 class User(BaseModel):
     """Creates a new user"""
     email = ""
