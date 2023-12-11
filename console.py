@@ -32,8 +32,8 @@ from models.amenity import Amenity
 from models.place import Place
 
 current_classes = {'BaseModel': BaseModel, 'User': User,
-                   'Amenity': Amenity, 'City': City, 'State': State,
-                   'Place': Place, 'Review': Review}
+                    'Amenity': Amenity, 'City': City, 'State': State,
+                    'Place': Place, 'Review': Review}
 list_attribut = ["id","created_at","updated_at"]
 
 class HBNBCommand(cmd.Cmd):
